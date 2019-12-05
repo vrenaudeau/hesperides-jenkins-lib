@@ -64,6 +64,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
     static moduleFromDescriptorOne = 'moduleFromDescriptorOne'
     static moduleFromDescriptorTwo = 'moduleFromDescriptorTwo'
     static propertiesDiff = null
+    static diffPropDisplay = ''
 
 
     def setupSpec() {
@@ -538,7 +539,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
             hesperides.putModuleOnPlatform(app: applicationName,
                 platform: platformName2,
-                moduleName: moduleName,
+                moduleName: secondModuleName,
                 moduleVersion: moduleVersion,
                 isWorkingCopy: true,
                 logicGroupPath: "#${logicGroupName}#${subLogicGroup}"
@@ -549,10 +550,51 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 platform: platformName,
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
                 toPlatform: platformName2,
-            )
+                toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${secondModuleName}#${moduleVersion}#WORKINGCOPY")
         then:
             propertiesDiff != null
         cleanup:
+            hesperides.deletePlatform(app: applicationName, platform: platformName2)
+    }
+
+    def "Allow the display of the differences between one or two platforms"() {
+        setup:
+            hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
+            hesperides.putModuleOnPlatform(app: applicationName,
+                platform: platformName2,
+                moduleName: secondModuleName,
+                moduleVersion: moduleVersion,
+                isWorkingCopy: true,
+                logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
+            hesperides.createInstance(app: applicationName, platform: platformName2, moduleName: secondModuleName, instance: instanceName, path: "#${logicGroupName}#${subLogicGroup}")
+            def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
+            def info2 = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
+            def modulePropertiesPath = info.modules[0].properties_path
+            def modulePropertiesPath2 = info2.modules[0].properties_path
+            def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
+            def props2 = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
+            log(info)
+            props['key_value_properties'].add([name: "myPropertyName",value: "myPropertyValue"], [name: "myPropertyName1",value: "myPropertyValue1"])
+            props2['key_value_properties'].add([name: "myPropertyName",value: "myPropertyValue"],[name: "myPropertyName2",value: "myPropertyValue2"])
+            hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath, commitMsg: 'Update properties for getDiffPropDisplay test function PTF1', properties: props, platformVid: info.version_id)
+            hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2, commitMsg: 'Update properties for getDiffPropDisplay test function PTF2', properties: props2, platformVid: info2.version_id)
+            def newProps = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
+            def newProps2 = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
+        when:
+            diffPropDisplay = hesperides.getDiffPropDisplay(
+                app: applicationName,
+                platform: platformName,
+                modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
+                toPlatform: platformName2,
+                toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${secondModuleName}#${moduleVersion}#WORKINGCOPY",
+                diffType: 'differing')
+        then:
+            newProps['key_value_properties'].size() == 2
+            newProps2['key_value_properties'].size() == 2
+            log("platform ppties: ${diffPropDisplay}")
+            diffPropDisplay != []
+        cleanup:
+            hesperides.deleteModule(moduleName: moduleFromDescriptorTwo, version: moduleVersion, moduleType: 'workingcopy')
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
 

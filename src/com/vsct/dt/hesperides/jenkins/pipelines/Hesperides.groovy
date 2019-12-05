@@ -427,6 +427,106 @@ class Hesperides implements Serializable {
             ])
     }
 
+    // Function to display differences from getDiff() with a diffType (common/differing/left/right)
+    // optional: instanceName, toApplication, toPlatform, toModulePropertiesPath, toInstanceName, timestampDate, compareStoredValues
+    def getDiffPropDisplay(Map args) { required(args, ['app', 'platform', 'modulePropertiesPath', 'diffType'])
+        // Output variable (instead of println)
+        def output = '' // Output variable (instead of println)
+        def propDiff = this.getDiffProperties(args) // get the answer back from the getDiffProperties's function call
+        // Count the total of item with diff.
+        def listSize = propDiff.get(args.diffType).size()
+        // Properties list which depend on the "param" value (only_left, only_right, common, differing)
+        def propList = propDiff.get(args.diffType).collect { it }
+        // LENGTH PROP : Check characters max to pad the column
+        def maxPropNameLength = propList.collect { it.name.length() }.max() ?: 0
+        def maxLeftFinalValueLength = propList.collect { it.left.finalValue.length() }.max() ?: 0
+        def maxRightFinalValueLength = propList.collect { it.right.finalValue.length() }.max() ?: 0
+
+        // DISPLAY : Variable for the column's display
+        def title = "     R E P O R T   D I F F   P R O P E R T I E S     "
+        def colId = "   #   "
+        def colProperty = "     P R O P E R T I E S     "
+        def colFinalLeftValue = "     F I N A L   L E F T   V A L U E     "
+        def colFinalRightValue = "     F I N A L   R I G H T   V A L U E     "
+        def noDifference = "     * * * * *   N O   P R O P E R T I E S   I N   D I F F E R E N C E S !   * * * * *     "
+
+/* **********************************************************************************************************************
+                                                 D  I  S  P  L  A  Y
+   ********************************************************************************************************************** */
+        // Display of the diff. total
+        output += "\n*********************************************************\n"
+        output += "      Total of item in the \"${args.diffType}\" section : ${listSize}\n"
+        output += "*********************************************************\n"
+
+
+        // Columns variables
+        def MAX_COLUMN_CONTENT_LENGTH = 80 // Max length for the name or value's display
+        def colIdLength = colId.length()
+        def colPropertyLength = Math.min(Math.max(colProperty.length(), maxPropNameLength), MAX_COLUMN_CONTENT_LENGTH)
+        def colLeftValueLength = Math.min(Math.max(colFinalLeftValue.length(), maxLeftFinalValueLength),MAX_COLUMN_CONTENT_LENGTH)
+        def colRightValueLength = Math.min(Math.max(colFinalRightValue.length(), maxRightFinalValueLength),MAX_COLUMN_CONTENT_LENGTH)
+        def initialTotalLength = ( colIdLength + colPropertyLength + colLeftValueLength + colRightValueLength )
+
+        // Display variables
+        def separation = " "
+        def suite = "="
+        def firstLine = "  ${suite.padRight(initialTotalLength + 9, "=")}"
+        def fullTitle = title.center(initialTotalLength + 9)
+        def secondLine = "| ${suite.padRight(initialTotalLength + 9, "=")} |"
+
+        // Test if it is an empty array for the column's width
+        if ( propList == [] ) {
+
+            def empty = separation.center(initialTotalLength + 9)
+            def noDiff = noDifference.center(initialTotalLength + 9)
+
+            // E m p t y   d i s p l a y
+            output += "\n${firstLine}\n"
+            output += "| ${fullTitle} |\n"
+            output += "${secondLine}\n"
+            output += "| ${colId.center(colIdLength)} | ${colProperty.center(colPropertyLength)} | ${colFinalLeftValue.center(colLeftValueLength)} | ${colFinalRightValue.center(colRightValueLength)} |\n"
+            output += "${secondLine}\n"
+            output += "| ${empty} |\n"
+            output += "| ${noDiff} |\n"
+            output += "| ${empty} |\n"
+            output += "${firstLine}\n"
+
+        } else {
+
+            // P r o p e r t i e s   d i s p l a y
+            def propertyMap = [:] // Associative array
+            propList.each() { it -> propertyMap[it.name] = [left: it.left, right: it.right] } // Associative array definition
+            def properties = new ArrayList(propertyMap.keySet())
+            def propertiesASC = properties.sort() // Items sorted by name
+
+            // D I S P L A Y   P R O P E R T I E S   A S C
+            output += "\n${firstLine}\n"
+            output += "| ${fullTitle} |\n"
+            output += "${secondLine}\n"
+            output += "| ${colId.center(colIdLength)} | ${colProperty.center(colPropertyLength)} | ${colFinalLeftValue.center(colLeftValueLength)} | ${colFinalRightValue.center(colRightValueLength)} |\n"
+            output += "${secondLine}\n"
+
+            propertiesASC.each { propName ->
+                def property = propertyMap[propName]
+                def leftFinalValue = property.left.finalValue
+                def rightFinalValue = property.right.finalValue
+
+                if (propName.length() > MAX_COLUMN_CONTENT_LENGTH) {
+                    propName = propName.take(MAX_COLUMN_CONTENT_LENGTH - 5) + '(...)'}
+
+                if (leftFinalValue.length() > MAX_COLUMN_CONTENT_LENGTH) {
+                    leftFinalValue = leftFinalValue.take(MAX_COLUMN_CONTENT_LENGTH - 5) + '(...)'}
+
+                if (rightFinalValue.length() > MAX_COLUMN_CONTENT_LENGTH) {
+                    rightFinalValue = rightFinalValue.take(MAX_COLUMN_CONTENT_LENGTH - 5) + '(...)'}
+
+                output += "| ${(propertiesASC.indexOf(propName) + 1).toString().center(colIdLength)} | ${propName.padRight(colPropertyLength)} | ${leftFinalValue.center(colLeftValueLength)} | ${rightFinalValue.center(colRightValueLength)} |\n"
+            }
+            output += "${secondLine}\n"
+        }
+        return output
+    }
+
     private updateModuleProperties(Map args) {
         def modulePropertiesPath = ['#']
         if (args.moduleName != 'GLOBAL') {
