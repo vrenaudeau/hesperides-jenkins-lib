@@ -455,7 +455,7 @@ class Hesperides implements Serializable {
    ********************************************************************************************************************** */
         // Display of the diff. total
         output += "\n*********************************************************\n"
-        output += "      Total of item in the \"${args.diffType}\" section : ${listSize}\n"
+        output += "      Total of items in the \"${args.diffType}\" section : ${listSize}\n"
         output += "*********************************************************\n"
 
 
