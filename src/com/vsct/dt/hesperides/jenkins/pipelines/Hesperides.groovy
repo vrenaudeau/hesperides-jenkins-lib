@@ -443,28 +443,28 @@ class Hesperides implements Serializable {
         def maxRightFinalValueLength = propList.collect { it.right.finalValue.length() }.max() ?: 0
 
         // DISPLAY : Variable for the column's display
-        def title = "     R E P O R T   D I F F   P R O P E R T I E S     "
-        def colId = "   #   "
-        def colProperty = "     P R O P E R T I E S     "
-        def colFinalLeftValue = "     F I N A L   L E F T   V A L U E     "
-        def colFinalRightValue = "     F I N A L   R I G H T   V A L U E     "
-        def noDifference = "     * * * * *   N O   P R O P E R T I E S   I N   D I F F E R E N C E S !   * * * * *     "
+        def title = '     R E P O R T   D I F F   P R O P E R T I E S     '
+        def colId = '   #   '
+        def colProperty = '     P R O P E R T I E S     '
+        def colFinalLeftValue = '     F I N A L   L E F T   V A L U E     '
+        def colFinalRightValue = '     F I N A L   R I G H T   V A L U E     '
+        def noDifference = '     * * * * *   N O   P R O P E R T I E S   I N   D I F F E R E N C E S !   * * * * *     '
 
 /* **********************************************************************************************************************
                                                  D  I  S  P  L  A  Y
    ********************************************************************************************************************** */
         // Display of the diff. total
-        output += "\n*********************************************************\n"
-        output += "      Total of items in the \"${args.diffType}\" section : ${listSize}\n"
-        output += "*********************************************************\n"
+        output += '\n*********************************************************\n'
+        output += '      Total of items in the \"${args.diffType}\" section : ${listSize}\n'
+        output += '*********************************************************\n'
 
 
         // Columns variables
-        def MAX_COLUMN_CONTENT_LENGTH = 80 // Max length for the name or value's display
+        def maxColumnContentLength = 80 // Max length for the value's column (char)
         def colIdLength = colId.length()
-        def colPropertyLength = Math.min(Math.max(colProperty.length(), maxPropNameLength), MAX_COLUMN_CONTENT_LENGTH)
-        def colLeftValueLength = Math.min(Math.max(colFinalLeftValue.length(), maxLeftFinalValueLength),MAX_COLUMN_CONTENT_LENGTH)
-        def colRightValueLength = Math.min(Math.max(colFinalRightValue.length(), maxRightFinalValueLength),MAX_COLUMN_CONTENT_LENGTH)
+        def colPropertyLength = Math.min(Math.max(colProperty.length(), maxPropNameLength), maxColumnContentLength)
+        def colLeftValueLength = Math.min(Math.max(colFinalLeftValue.length(), maxLeftFinalValueLength), maxColumnContentLength)
+        def colRightValueLength = Math.min(Math.max(colFinalRightValue.length(), maxRightFinalValueLength), maxColumnContentLength)
         def initialTotalLength = ( colIdLength + colPropertyLength + colLeftValueLength + colRightValueLength )
 
         // Display variables
@@ -476,7 +476,6 @@ class Hesperides implements Serializable {
 
         // Test if it is an empty array for the column's width
         if ( propList == [] ) {
-
             def empty = separation.center(initialTotalLength + 9)
             def noDiff = noDifference.center(initialTotalLength + 9)
 
@@ -490,12 +489,10 @@ class Hesperides implements Serializable {
             output += "| ${noDiff} |\n"
             output += "| ${empty} |\n"
             output += "${firstLine}\n"
-
         } else {
-
             // P r o p e r t i e s   d i s p l a y
             def propertyMap = [:] // Associative array
-            propList.each() { it -> propertyMap[it.name] = [left: it.left, right: it.right] } // Associative array definition
+            propList.each { it -> propertyMap[it.name] = [left: it.left, right: it.right] } // Associative array definition
             def properties = new ArrayList(propertyMap.keySet())
             def propertiesASC = properties.sort() // Items sorted by name
 
@@ -510,17 +507,18 @@ class Hesperides implements Serializable {
                 def property = propertyMap[propName]
                 def leftFinalValue = property.left.finalValue
                 def rightFinalValue = property.right.finalValue
+                def name = propName
 
-                if (propName.length() > MAX_COLUMN_CONTENT_LENGTH) {
-                    propName = propName.take(MAX_COLUMN_CONTENT_LENGTH - 5) + '(...)'}
+                if (propName.length() > maxColumnContentLength) {
+                    name = propName.take(maxColumnContentLength - 5) + '(...)'}
 
-                if (leftFinalValue.length() > MAX_COLUMN_CONTENT_LENGTH) {
-                    leftFinalValue = leftFinalValue.take(MAX_COLUMN_CONTENT_LENGTH - 5) + '(...)'}
+                if (leftFinalValue.length() > maxColumnContentLength) {
+                    leftFinalValue = leftFinalValue.take(maxColumnContentLength - 5) + '(...)'}
 
-                if (rightFinalValue.length() > MAX_COLUMN_CONTENT_LENGTH) {
-                    rightFinalValue = rightFinalValue.take(MAX_COLUMN_CONTENT_LENGTH - 5) + '(...)'}
+                if (rightFinalValue.length() > maxColumnContentLength) {
+                    rightFinalValue = rightFinalValue.take(maxColumnContentLength - 5) + '(...)'}
 
-                output += "| ${(propertiesASC.indexOf(propName) + 1).toString().center(colIdLength)} | ${propName.padRight(colPropertyLength)} | ${leftFinalValue.center(colLeftValueLength)} | ${rightFinalValue.center(colRightValueLength)} |\n"
+                output += "| ${(propertiesASC.indexOf(name) + 1).toString().center(colIdLength)} | ${propName.padRight(colPropertyLength)} | ${leftFinalValue.center(colLeftValueLength)} | ${rightFinalValue.center(colRightValueLength)} |\n"
             }
             output += "${secondLine}\n"
         }

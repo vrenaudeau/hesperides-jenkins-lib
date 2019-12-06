@@ -557,15 +557,15 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
 
-    def "Allow the display of the differences between one or two platforms"() {
-        setup:
-            hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
-            hesperides.putModuleOnPlatform(app: applicationName,
-                platform: platformName2,
-                moduleName: secondModuleName,
-                moduleVersion: moduleVersion,
-                isWorkingCopy: true,
-                logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
+    def "Can display the differences between one or two platforms"() {
+            setup:
+                hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
+                hesperides.putModuleOnPlatform(app: applicationName,
+                    platform: platformName2,
+                    moduleName: secondModuleName,
+                    moduleVersion: moduleVersion,
+                    isWorkingCopy: true,
+                    logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
             hesperides.createInstance(app: applicationName, platform: platformName2, moduleName: secondModuleName, instance: instanceName, path: "#${logicGroupName}#${subLogicGroup}")
             def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
             def info2 = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
