@@ -60,7 +60,7 @@ class Hesperides implements Serializable {
         def hostname = 'hesperides'
         try { // we try to build a FQDN based on the Jenkins executor own domain name
             def fqdn = InetAddress.getByName(hostname).canonicalHostName
-            hostname += '.' + fqdn.split('\\.', 2)[1]
+            hostname += ".${fqdn.split('\\.', 2)[1]}"
         } catch (UnknownHostException|SecurityException exception) {} // do nothing
         return "https://${hostname}"
     }
@@ -454,9 +454,9 @@ class Hesperides implements Serializable {
                                                  D  I  S  P  L  A  Y
    ********************************************************************************************************************** */
         // Display of the diff. total
-        output += '\n*********************************************************\n'
-        output += '      Total of items in the \"${args.diffType}\" section : ${listSize}\n'
-        output += '*********************************************************\n'
+        output += "\n*********************************************************\n"
+        output += "      Total of items in the \"${args.diffType}\" section : ${listSize}\n"
+        output += "*********************************************************\n"
 
 
         // Columns variables
