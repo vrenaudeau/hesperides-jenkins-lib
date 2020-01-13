@@ -558,14 +558,16 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
     }
 
     def "Can display the differences between one or two platforms"() {
-            setup:
-                hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
-                hesperides.putModuleOnPlatform(app: applicationName,
-                    platform: platformName2,
-                    moduleName: secondModuleName,
-                    moduleVersion: moduleVersion,
-                    isWorkingCopy: true,
-                    logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
+        setup:
+            hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
+            hesperides.putModuleOnPlatform(
+                app: applicationName,
+                platform: platformName2,
+                moduleName: secondModuleName,
+                moduleVersion: moduleVersion,
+                isWorkingCopy: true,
+                logicGroupPath: "#${logicGroupName}#${subLogicGroup}"
+            )
             hesperides.createInstance(app: applicationName, platform: platformName2, moduleName: secondModuleName, instance: instanceName, path: "#${logicGroupName}#${subLogicGroup}")
             def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
             def info2 = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
@@ -587,7 +589,8 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
                 toPlatform: platformName2,
                 toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${secondModuleName}#${moduleVersion}#WORKINGCOPY",
-                diffType: 'differing')
+                diffType: 'differing'
+            )
         then:
             newProps['key_value_properties'].size() == 2
             newProps2['key_value_properties'].size() == 2
