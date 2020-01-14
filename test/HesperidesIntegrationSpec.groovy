@@ -534,7 +534,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             ]
     }
 
-    def "Can compare 2 platforms between each other"() {
+    def "Can compare 2 deployed modules on different platforms"() {
         setup:
             hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
             hesperides.putModuleOnPlatform(app: applicationName,
@@ -557,7 +557,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
 
-    def "Can display the differences between one or two platforms"() {
+    def "Can display, as text, the differences of properties between 2 deployed modules on the same platform"() {
         setup:
             hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
             hesperides.putModuleOnPlatform(
@@ -576,8 +576,8 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
             def props2 = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
             log(info)
-            props['key_value_properties'].add([name: "myPropertyName",value: "myPropertyValue"], [name: "myPropertyName1",value: "myPropertyValue1"])
-            props2['key_value_properties'].add([name: "myPropertyName",value: "myPropertyValue"],[name: "myPropertyName2",value: "myPropertyValue2"])
+            props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"], [name: "myPropertyName2",value: "myPropertyValue1"])
+            props2['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"],[name: "myPropertyName2",value: "myPropertyValue2"])
             hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath, commitMsg: 'Update properties for getDiffPropDisplay test function PTF1', properties: props, platformVid: info.version_id)
             hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2, commitMsg: 'Update properties for getDiffPropDisplay test function PTF2', properties: props2, platformVid: info2.version_id)
             def newProps = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
@@ -592,10 +592,8 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 diffType: 'differing'
             )
         then:
-            newProps['key_value_properties'].size() == 2
-            newProps2['key_value_properties'].size() == 2
             log("platform ppties: ${diffPropDisplay}")
-            diffPropDisplay != []
+            diffPropDisplay == [{"only_left":[],"only_right":[],"common":["left":{"finalValue":"myPropertyValue","defaultValue":"","storedValue":"","transformations":[]},"right":{"finalValue":"myPropertyValue","defaultValue":"","storedValue":"","transformations":[]},"name":"myPropertyName"}]"differing":[{"left":{"finalValue":"myPropertyValue1","defaultValue":"","storedValue":"","transformations":[]},"right":{"finalValue":"myPropertyValue2","defaultValue":"","storedValue":"","transformations":[]},"name":"myPropertyName2"}]}]
         cleanup:
             hesperides.deleteModule(moduleName: moduleFromDescriptorTwo, version: moduleVersion, moduleType: 'workingcopy')
             hesperides.deletePlatform(app: applicationName, platform: platformName2)

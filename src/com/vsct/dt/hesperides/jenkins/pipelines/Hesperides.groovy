@@ -429,9 +429,8 @@ class Hesperides implements Serializable {
 
     // Function to display differences from getDiff() with a diffType (common/differing/left/right)
     // optional: instanceName, toApplication, toPlatform, toModulePropertiesPath, toInstanceName, timestampDate, compareStoredValues
-    def getDiffPropDisplay(Map args) { required(args, ['app', 'platform', 'modulePropertiesPath', 'diffType'])
-        // Output variable (instead of println)
-        def output = '' // Output variable (instead of println)
+    def getDiffPropertiesAsString(Map args) { required(args, ['app', 'platform', 'modulePropertiesPath', 'diffType'])
+        def output = '' // Output variable
         def propDiff = this.getDiffProperties(args) // get the answer back from the getDiffProperties's function call
         // Count the total of item with diff.
         def listSize = propDiff.get(args.diffType).size()
@@ -443,16 +442,16 @@ class Hesperides implements Serializable {
         def maxRightFinalValueLength = propList.collect { it.right.finalValue.length() }.max() ?: 0
 
         // DISPLAY : Variable for the column's display
-        def title = '     R E P O R T   D I F F   P R O P E R T I E S     '
+        def title = '     REPORT DIFF PROPERTIES     '
         def colId = '   #   '
-        def colProperty = '     P R O P E R T I E S     '
-        def colFinalLeftValue = '     F I N A L   L E F T   V A L U E     '
-        def colFinalRightValue = '     F I N A L   R I G H T   V A L U E     '
-        def noDifference = '     * * * * *   N O   P R O P E R T I E S   I N   D I F F E R E N C E S !   * * * * *     '
+        def colProperty = '     PROPERTIES     '
+        def colFinalLeftValue = '     FINAL LEFT VALUE     '
+        def colFinalRightValue = '     FINAL RIGHT VALUE     '
+        def noDifference = '     * * * * *   NO PROPERTIES ARE DIFFERING!  * * * * *     '
 
-/* **********************************************************************************************************************
-                                                 D  I  S  P  L  A  Y
-   ********************************************************************************************************************** */
+/* **********************************************************************************************************
+                                                 DISPLAY
+   ********************************************************************************************************** */
         // Display of the diff. total
         output += "\n*********************************************************\n"
         output += "      Total of items in the \"${args.diffType}\" section : ${listSize}\n"
@@ -468,18 +467,16 @@ class Hesperides implements Serializable {
         def initialTotalLength = ( colIdLength + colPropertyLength + colLeftValueLength + colRightValueLength )
 
         // Display variables
-        def separation = " "
-        def suite = "="
-        def firstLine = "  ${suite.padRight(initialTotalLength + 9, "=")}"
+        def firstLine = "  ${"=".padRight(initialTotalLength + 9, "=")}"
         def fullTitle = title.center(initialTotalLength + 9)
-        def secondLine = "| ${suite.padRight(initialTotalLength + 9, "=")} |"
+        def secondLine = "| ${"=".padRight(initialTotalLength + 9, "=")} |"
 
         // Test if it is an empty array for the column's width
         if ( propList == [] ) {
-            def empty = separation.center(initialTotalLength + 9)
+            def empty = " ".center(initialTotalLength + 9)
             def noDiff = noDifference.center(initialTotalLength + 9)
 
-            // E m p t y   d i s p l a y
+            // Empty display
             output += "\n${firstLine}\n"
             output += "| ${fullTitle} |\n"
             output += "${secondLine}\n"
@@ -490,13 +487,13 @@ class Hesperides implements Serializable {
             output += "| ${empty} |\n"
             output += "${firstLine}\n"
         } else {
-            // P r o p e r t i e s   d i s p l a y
+            // Properties display
             def propertyMap = [:] // Associative array
-            propList.each { it -> propertyMap[it.name] = [left: it.left, right: it.right] } // Associative array definition
-            def properties = new ArrayList(propertyMap.keySet())
-            def propertiesASC = properties.sort() // Items sorted by name
+            propList.each { it -> propertyMap[it.name] = [left: it.left, right: it.right] } // Associative array initialization
+            def propertiesASC = new ArrayList(propertyMap.keySet())
+            propertiesASC.sort() // Items sorted by name
 
-            // D I S P L A Y   P R O P E R T I E S   A S C
+            // DISPLAY PROPERTIES ASC
             output += "\n${firstLine}\n"
             output += "| ${fullTitle} |\n"
             output += "${secondLine}\n"
@@ -507,18 +504,21 @@ class Hesperides implements Serializable {
                 def property = propertyMap[propName]
                 def leftFinalValue = property.left.finalValue
                 def rightFinalValue = property.right.finalValue
-                def name = propName
 
                 if (propName.length() > maxColumnContentLength) {
-                    name = propName.take(maxColumnContentLength - 5) + '(...)'}
+                    propName = propName.take(maxColumnContentLength - 5) + '(...)'
+                }
 
                 if (leftFinalValue.length() > maxColumnContentLength) {
-                    leftFinalValue = leftFinalValue.take(maxColumnContentLength - 5) + '(...)'}
+                    leftFinalValue = leftFinalValue.take(maxColumnContentLength - 5) + '(...)'
+                }
 
                 if (rightFinalValue.length() > maxColumnContentLength) {
-                    rightFinalValue = rightFinalValue.take(maxColumnContentLength - 5) + '(...)'}
+                    rightFinalValue = rightFinalValue.take(maxColumnContentLength - 5) + '(...)'
+                }
 
-                output += "| ${(propertiesASC.indexOf(name) + 1).toString().center(colIdLength)} | ${propName.padRight(colPropertyLength)} | ${leftFinalValue.center(colLeftValueLength)} | ${rightFinalValue.center(colRightValueLength)} |\n"
+                // Line pattern display
+                output += "| ${(propertiesASC.indexOf(propName) + 1).toString().center(colIdLength)} | ${propName.padRight(colPropertyLength)} | ${leftFinalValue.center(colLeftValueLength)} | ${rightFinalValue.center(colRightValueLength)} |\n"
             }
             output += "${secondLine}\n"
         }

@@ -224,7 +224,7 @@ def getDiffProperties(Map args) {
             steps: this.steps).getDiffProperties(args)
 }
 
-def getDiffPropDisplay(Map args) {
+def getDiffPropertiesAsString(Map args) {
     new Hesperides(apiRootUrl: args.apiRootUrl,
             auth: args.auth,
             httpRequester: new JenkinsHTTRequester(this.steps),

@@ -357,21 +357,21 @@
     </section>
 
     <section>
-       <h2>hesperides.getDiffPropDisplay</h2>
-           <b>Display</b> the comparison of properties between one platform or module with itself (minus 2 hours) or between 2 platforms or 2 modules. 
-           It gives the number of differences with 2 columns (1 left/1right). 
+       <h2>hesperides.getDiffPropertiesAsString</h2>
+           Build a text representation of the output of <a href="#hesperides.getDiffProperties"><code>getDiffProperties</code></a> as a 2 columns table 
+           showing the differences of properties values between 2 platforms or deployed modules.
        <br>
            Example:
        <pre><code>
            // Diff. between 2 versions of a same module at a different timestamp
-           hesperides.getDiffPropDisplay(
+           hesperides.getDiffPropertiesAsString(
                app: 'APP',
                platform: 'PTF', 
                modulePropertiesPath: '#APP#PTF#module#1.0#WORKINGCOPY',
                diffType: 'differing')
          OR
            // Diff. between 2 versions of a same module on 2 differents platforms
-           hesperides.getDiffPropDisplay(
+           hesperides.getDiffPropertiesAsString(
                app: 'APP',
                platform: 'PTF',
                modulePropertiesPath: '#APP#PTF#module#1.0#WORKINGCOPY',

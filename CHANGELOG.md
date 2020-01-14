@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.1.21] - 2019-12-05
+## [1.1.21] - 2020-01-13
 ### Added
-- `getDiffPropDisplay` : Works like the `getDiffProperties` function but has one more prameter to display the differences according to "common", "only_left", "only_right" or "differing". 
-This function uses the REST API /properties/diff which returns a response filtered by the 'difftype' parameter and display like in a console mode. Usefull to send it by mail or display in the jenkins'console! 
+- `getDiffPropDisplay` : Works like the `getDiffProperties` function but has one more parameter to display the differences according to "common", "only_left", "only_right" or "differing".
+This function uses the REST API /properties/diff which returns a response filtered by the 'difftype' parameter and display like in a console mode. Useful to send it by mail or display in the jenkins'console!
 
 ## [1.1.20] - 2019-11-13
 ### Fixed
