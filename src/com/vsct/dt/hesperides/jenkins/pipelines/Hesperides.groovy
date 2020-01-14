@@ -504,9 +504,10 @@ class Hesperides implements Serializable {
                 def property = propertyMap[propName]
                 def leftFinalValue = property.left.finalValue
                 def rightFinalValue = property.right.finalValue
+                def displayedPropName = propName
 
                 if (propName.length() > maxColumnContentLength) {
-                    propName = propName.take(maxColumnContentLength - 5) + '(...)'
+                    displayedPropName = propName.take(maxColumnContentLength - 5) + '(...)'
                 }
 
                 if (leftFinalValue.length() > maxColumnContentLength) {
@@ -518,7 +519,7 @@ class Hesperides implements Serializable {
                 }
 
                 // Line pattern display
-                output += "| ${(propertiesASC.indexOf(propName) + 1).toString().center(colIdLength)} | ${propName.padRight(colPropertyLength)} | ${leftFinalValue.center(colLeftValueLength)} | ${rightFinalValue.center(colRightValueLength)} |\n"
+                output += "| ${(propertiesASC.indexOf(displayedPropName) + 1).toString().center(colIdLength)} | ${propName.padRight(colPropertyLength)} | ${leftFinalValue.center(colLeftValueLength)} | ${rightFinalValue.center(colRightValueLength)} |\n"
             }
             output += "${secondLine}\n"
         }
