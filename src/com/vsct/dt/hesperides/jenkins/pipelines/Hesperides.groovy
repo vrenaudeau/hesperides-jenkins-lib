@@ -467,13 +467,13 @@ class Hesperides implements Serializable {
         def initialTotalLength = ( colIdLength + colPropertyLength + colLeftValueLength + colRightValueLength )
 
         // Display variables
-        def firstLine = "  ${"=".padRight(initialTotalLength + 9, "=")}"
+        def firstLine = "  ${'='.padRight(initialTotalLength + 9, '=')}"
         def fullTitle = title.center(initialTotalLength + 9)
-        def secondLine = "| ${"=".padRight(initialTotalLength + 9, "=")} |"
+        def secondLine = "| ${'='.padRight(initialTotalLength + 9, '=')} |"
 
         // Test if it is an empty array for the column's width
         if ( propList == [] ) {
-            def empty = " ".center(initialTotalLength + 9)
+            def empty = ' '.center(initialTotalLength + 9)
             def noDiff = noDifference.center(initialTotalLength + 9)
 
             // Empty display
