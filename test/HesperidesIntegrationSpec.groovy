@@ -23,6 +23,7 @@ import com.vsct.dt.hesperides.jenkins.pipelines.http.HTTPBuilderRequester
 
 // Les méthodes définies dans un trait ne seront pas exécutées comme des tests
 trait Helper {
+
     /**
      * +1 au dernier chiffre précédé d'un '.'
      * @param version au format #.#.# ...
@@ -35,6 +36,7 @@ trait Helper {
 
         "${baseVersion}${lastNumber + 1}"
     }
+
 }
 
 class HesperidesIntegrationSpec extends Specification implements Helper {
@@ -45,26 +47,26 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                                            auth: ENV.HESPERIDES_AUTH,
                                            httpRequester: new HTTPBuilderRequester())
 
-    static applicationName = 'app'
-    static platformName = 'platform'
-    static platformName2 = 'platform2'
-    static moduleName = 'module'
-    static secondModuleName = 'moduletwo'
-    static moduleVersion = '2.0.0.0'
-    static instanceName = 'instance'
-    static instanceNameTwo = 'instanceTwo'
-    static instanceNameThree = 'instanceThree'
-    static logicGroupName = 'GROUP'
-    static logicGroupNameTwo = 'CUSTOMGROUP'
-    static subLogicGroup = 'TECHNO'
-    static templateOne = 'templateOne.yml'
-    static templateTwo = 'templateTwo.yml'
-    static templateThree = 'templateThree.yml'
-    static templateFour = 'templateFour.yml'
-    static moduleFromDescriptorOne = 'moduleFromDescriptorOne'
-    static moduleFromDescriptorTwo = 'moduleFromDescriptorTwo'
-    static propertiesDiff = null
-    static diffPropDisplay = ''
+    static String applicationName = 'app'
+    static String platformName = 'platform'
+    static String platformName2 = 'platform2'
+    static String moduleName = 'module'
+    static String secondModuleName = 'moduletwo'
+    static String moduleVersion = '2.0.0.0'
+    static String instanceName = 'instance'
+    static String instanceNameTwo = 'instanceTwo'
+    static String instanceNameThree = 'instanceThree'
+    static String logicGroupName = 'GROUP'
+    static String logicGroupNameTwo = 'CUSTOMGROUP'
+    static String subLogicGroup = 'TECHNO'
+    static String templateOne = 'templateOne.yml'
+    static String templateTwo = 'templateTwo.yml'
+    static String templateThree = 'templateThree.yml'
+    static String templateFour = 'templateFour.yml'
+    static String moduleFromDescriptorOne = 'moduleFromDescriptorOne'
+    static String moduleFromDescriptorTwo = 'moduleFromDescriptorTwo'
+    static String propertiesDiff = null
+    static String diffPropDisplay = ''
 
 
     def setupSpec() {
@@ -537,7 +539,8 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
     def "Can compare 2 deployed modules on different platforms"() {
         setup:
             hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
-            hesperides.putModuleOnPlatform(app: applicationName,
+            hesperides.putModuleOnPlatform(
+                app: applicationName,
                 platform: platformName2,
                 moduleName: secondModuleName,
                 moduleVersion: moduleVersion,
@@ -568,7 +571,6 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 isWorkingCopy: true,
                 logicGroupPath: "#${logicGroupName}#${subLogicGroup}"
             )
-            hesperides.createInstance(app: applicationName, platform: platformName2, moduleName: secondModuleName, instance: instanceName, path: "#${logicGroupName}#${subLogicGroup}")
             def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
             def info2 = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
             def modulePropertiesPath = info.modules[0].properties_path
@@ -595,7 +597,6 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             log("platform ppties: ${diffPropDisplay}")
             diffPropDisplay == ['only_left':[],'only_right':[],'common':['left':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName'],'differing':['left':['finalValue':'myPropertyValue1','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName2']]
         cleanup:
-            hesperides.deleteModule(moduleName: moduleFromDescriptorTwo, version: moduleVersion, moduleType: 'workingcopy')
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
 
