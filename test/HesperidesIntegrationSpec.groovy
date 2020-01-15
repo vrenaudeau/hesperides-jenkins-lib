@@ -562,6 +562,15 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
 
     def "Can display, as text, the differences of properties between 2 deployed modules on the same platform"() {
         setup:
+            hesperides.createPlatform(app: applicationName, platform: platformName, version: '1.0.0.0')
+            hesperides.putModuleOnPlatform(
+                app: applicationName,
+                platform: platformName,
+                moduleName: moduleName,
+                moduleVersion: moduleVersion,
+                isWorkingCopy: true,
+                logicGroupPath: "#${logicGroupName}#${subLogicGroup}"
+            )
             hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
             hesperides.putModuleOnPlatform(
                 app: applicationName,
@@ -597,6 +606,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             log("platform ppties: ${diffPropDisplay}")
             diffPropDisplay == ['only_left':[],'only_right':[],'common':['left':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName'],'differing':['left':['finalValue':'myPropertyValue1','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName2']]
         cleanup:
+            hesperides.deletePlatform(app: applicationName, platform: platformName)
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
 
