@@ -593,7 +593,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             )
         then:
             log("platform ppties: ${diffPropDisplay}")
-            diffPropDisplay == ['only_left':[],'only_right':[],'common':['left':'finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[],'right':'finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[],'name':'myPropertyName']'differing':['left':'finalValue':'myPropertyValue1','defaultValue':'','storedValue':'','transformations':[],'right':'finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[],'name':'myPropertyName2']]
+            diffPropDisplay == ['only_left':[],'only_right':[],'common':['left':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName'],'differing':['left':['finalValue':'myPropertyValue1','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName2']]
         cleanup:
             hesperides.deleteModule(moduleName: moduleFromDescriptorTwo, version: moduleVersion, moduleType: 'workingcopy')
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
