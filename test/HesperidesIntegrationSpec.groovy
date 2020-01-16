@@ -69,7 +69,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
     static diffPropDisplay = ''
 
 
-    def setupSpec() {
+    def setupSpec() { // run before the first feature method
         log "${ENV.HESPERIDES_AUTH}@${ENV.HESPERIDES_HOST}:${ENV.HESPERIDES_PORT}"
         hesperides.createPlatform(app: applicationName, platform: platformName, version: '1.0.0.0')
         def infos = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
@@ -98,7 +98,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
         hesperides.createInstance(app: applicationName, platform: platformName, moduleName: secondModuleName, instance: instanceNameThree, path: "#${logicGroupNameTwo}#${subLogicGroup}")
     }
 
-    def cleanupSpec() {
+    def cleanupSpec() { // run after the last feature method
         hesperides.deletePlatform(app:applicationName, platform: platformName)
         hesperides.deleteModule(moduleName: moduleName, version: moduleVersion, moduleType: 'workingcopy')
         hesperides.deleteModule(moduleName: secondModuleName, version: moduleVersion, moduleType: 'workingcopy')
@@ -429,7 +429,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.deleteModule(moduleName: 'toto', version: '0.0', moduleType: 'workingcopy')
     }
 
-    def "Can create a new module in workingcopy from a module in workingcopy" () {
+    def "Can create a new module in workingcopy from a module in workingcopy (deprecated isWorkingcopy argument)" {
         when:
             hesperides.createModule(moduleName: 'toto', version: '0.0')
             hesperides.createModule(moduleName: 'toto', version: '0.1', fromModule: [name: 'toto', version: '0.0', isWorkingcopy: true])
@@ -562,6 +562,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
 
     def "Can display, as text, the differences of properties between 2 deployed modules on the same platform"() {
         setup:
+            hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
             hesperides.putModuleOnPlatform(
                 app: applicationName,
                 platform: platformName2,
@@ -590,7 +591,6 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             log("platform ppties: ${diffPropDisplay}")
             diffPropDisplay == ['only_left':[],'only_right':[],'common':['left':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName'],'differing':['left':['finalValue':'myPropertyValue1','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName2']]
         cleanup:
-            hesperides.deletePlatform(app: applicationName, platform: platformName)
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
 
