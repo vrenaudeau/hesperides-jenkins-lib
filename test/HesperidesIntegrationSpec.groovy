@@ -47,26 +47,26 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                                            auth: ENV.HESPERIDES_AUTH,
                                            httpRequester: new HTTPBuilderRequester())
 
-    static String applicationName = 'app'
-    static String platformName = 'platform'
-    static String platformName2 = 'platform2'
-    static String moduleName = 'module'
-    static String secondModuleName = 'moduletwo'
-    static String moduleVersion = '2.0.0.0'
-    static String instanceName = 'instance'
-    static String instanceNameTwo = 'instanceTwo'
-    static String instanceNameThree = 'instanceThree'
-    static String logicGroupName = 'GROUP'
-    static String logicGroupNameTwo = 'CUSTOMGROUP'
-    static String subLogicGroup = 'TECHNO'
-    static String templateOne = 'templateOne.yml'
-    static String templateTwo = 'templateTwo.yml'
-    static String templateThree = 'templateThree.yml'
-    static String templateFour = 'templateFour.yml'
-    static String moduleFromDescriptorOne = 'moduleFromDescriptorOne'
-    static String moduleFromDescriptorTwo = 'moduleFromDescriptorTwo'
-    static String propertiesDiff = null
-    static String diffPropDisplay = ''
+    static applicationName = 'app'
+    static platformName = 'platform'
+    static platformName2 = 'platform2'
+    static moduleName = 'module'
+    static secondModuleName = 'moduletwo'
+    static moduleVersion = '2.0.0.0'
+    static instanceName = 'instance'
+    static instanceNameTwo = 'instanceTwo'
+    static instanceNameThree = 'instanceThree'
+    static logicGroupName = 'GROUP'
+    static logicGroupNameTwo = 'CUSTOMGROUP'
+    static subLogicGroup = 'TECHNO'
+    static templateOne = 'templateOne.yml'
+    static templateTwo = 'templateTwo.yml'
+    static templateThree = 'templateThree.yml'
+    static templateFour = 'templateFour.yml'
+    static moduleFromDescriptorOne = 'moduleFromDescriptorOne'
+    static moduleFromDescriptorTwo = 'moduleFromDescriptorTwo'
+    static propertiesDiff = null
+    static diffPropDisplay = ''
 
 
     def setupSpec() {
@@ -358,25 +358,25 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
 
     def "Can upgrade module version on a platform"() {
         when:
-        def platformInfo = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
-        def currentVersion = platformInfo['modules'][0]['version']
-        def moduleName = platformInfo['modules'][0]['name']
-        def newVersion = nextVersion(currentVersion)
-        hesperides.setPlatformModuleVersion(app: applicationName,
-                platform: platformName,
-                newVersion: newVersion,
-                moduleName:moduleName)
-        def platformInfoUpdated = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
+            def platformInfo = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
+            def currentVersion = platformInfo['modules'][0]['version']
+            def moduleName = platformInfo['modules'][0]['name']
+            def newVersion = nextVersion(currentVersion)
+            hesperides.setPlatformModuleVersion(app: applicationName,
+                    platform: platformName,
+                    newVersion: newVersion,
+                    moduleName:moduleName)
+            def platformInfoUpdated = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
 
         then:
-        platformInfoUpdated['modules'].find { it['name'] == moduleName && it['version'] == newVersion }
+            platformInfoUpdated['modules'].find { it['name'] == moduleName && it['version'] == newVersion }
 
         cleanup:
-        hesperides.setPlatformModuleVersion(app: applicationName,
-                platform: platformName,
-                currentVersion: newVersion,
-                newVersion: currentVersion,
-                moduleName:moduleName)
+            hesperides.setPlatformModuleVersion(app: applicationName,
+                    platform: platformName,
+                    currentVersion: newVersion,
+                    newVersion: currentVersion,
+                    moduleName:moduleName)
     }
 
     def "Can create a new module in workingcopy from scratch"() {
@@ -429,17 +429,17 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.deleteModule(moduleName: 'toto', version: '0.0', moduleType: 'workingcopy')
     }
 
-    def "Can create a new module in workingcopy from a module in workingcopy (deprecated isWorkingcopy argument)"() {
+    def "Can create a new module in workingcopy from a module in workingcopy" "(deprecated isWorkingcopy argument)" {
         when:
-        hesperides.createModule(moduleName: 'toto', version: '0.0')
-        hesperides.createModule(moduleName: 'toto', version: '0.1', fromModule: [name: 'toto', version: '0.0', isWorkingcopy: true])
+            hesperides.createModule(moduleName: 'toto', version: '0.0')
+            hesperides.createModule(moduleName: 'toto', version: '0.1', fromModule: [name: 'toto', version: '0.0', isWorkingcopy: true])
 
         then:
-        hesperides.getModule(moduleName: 'toto', version: '0.1', moduleType: 'workingcopy')
+            hesperides.getModule(moduleName: 'toto', version: '0.1', moduleType: 'workingcopy')
 
         cleanup:
-        hesperides.deleteModule(moduleName: 'toto', version: '0.1', moduleType: 'workingcopy')
-        hesperides.deleteModule(moduleName: 'toto', version: '0.0', moduleType: 'workingcopy')
+            hesperides.deleteModule(moduleName: 'toto', version: '0.1', moduleType: 'workingcopy')
+            hesperides.deleteModule(moduleName: 'toto', version: '0.0', moduleType: 'workingcopy')
     }
 
     def "Can create a new module in workingcopy from a released module"() {
@@ -562,36 +562,40 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
 
     def "Can display, as text, the differences of properties between 2 deployed modules on the same platform"() {
         setup:
+            log "${ENV.HESPERIDES_AUTH}@${ENV.HESPERIDES_HOST}:${ENV.HESPERIDES_PORT}"
             hesperides.createPlatform(app: applicationName, platform: platformName, version: '1.0.0.0')
+            def infos = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
+            hesperides.createModule(moduleName: moduleName, version: moduleVersion)
             hesperides.putModuleOnPlatform(
                 app: applicationName,
                 platform: platformName,
                 moduleName: moduleName,
                 moduleVersion: moduleVersion,
                 isWorkingCopy: true,
-                logicGroupPath: "#${logicGroupName}#${subLogicGroup}"
-            )
+                logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
+            hesperides.createInstance(app: applicationName, platform: platformName, moduleName: moduleName, instance: instanceName, path: "#${logicGroupName}#${subLogicGroup}")
+            def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
+            def modulePropertiesPath = info.modules[0].properties_path
+            def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
+            props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"], [name: "myPropertyName2",value: "myPropertyValue1"])
+            hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath, commitMsg: 'Update properties for getDiffPropDisplay test function PTF1', properties: props, platformVid: info.version_id)
+            def newProps = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
             hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
+            
             hesperides.putModuleOnPlatform(
                 app: applicationName,
                 platform: platformName2,
-                moduleName: secondModuleName,
+                moduleName: moduleName,
                 moduleVersion: moduleVersion,
                 isWorkingCopy: true,
-                logicGroupPath: "#${logicGroupName}#${subLogicGroup}"
-            )
-            def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
+                logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
+            hesperides.createInstance(app: applicationName, platform: platformName2, moduleName: moduleName, instance: instanceName, path: "#${logicGroupName}#${subLogicGroup}")
             def info2 = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
-            def modulePropertiesPath = info.modules[0].properties_path
             def modulePropertiesPath2 = info2.modules[0].properties_path
-            def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
             def props2 = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
             log(info)
-            props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"], [name: "myPropertyName2",value: "myPropertyValue1"])
             props2['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"],[name: "myPropertyName2",value: "myPropertyValue2"])
-            hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath, commitMsg: 'Update properties for getDiffPropDisplay test function PTF1', properties: props, platformVid: info.version_id)
             hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2, commitMsg: 'Update properties for getDiffPropDisplay test function PTF2', properties: props2, platformVid: info2.version_id)
-            def newProps = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
             def newProps2 = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
         when:
             diffPropDisplay = hesperides.getDiffPropDisplay(
