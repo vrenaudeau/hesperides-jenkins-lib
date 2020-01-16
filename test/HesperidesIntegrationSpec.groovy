@@ -429,7 +429,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.deleteModule(moduleName: 'toto', version: '0.0', moduleType: 'workingcopy')
     }
 
-    def "Can create a new module in workingcopy from a module in workingcopy (deprecated isWorkingcopy argument)" {
+    def "Can create a new module in workingcopy from a module in workingcopy (deprecated isWorkingcopy argument)"() {
         when:
             hesperides.createModule(moduleName: 'toto', version: '0.0')
             hesperides.createModule(moduleName: 'toto', version: '0.1', fromModule: [name: 'toto', version: '0.0', isWorkingcopy: true])
@@ -589,7 +589,20 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             )
         then:
             log("platform ppties: ${diffPropDisplay}")
-            diffPropDisplay == ['only_left':[],'only_right':[],'common':['left':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName'],'differing':['left':['finalValue':'myPropertyValue1','defaultValue':'','storedValue':'','transformations':[]],'right':['finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[]],'name':'myPropertyName2']]
+            diffPropDisplay == [
+                'only_left':[],
+                'only_right':[],
+                'common':[
+                    'name':'myPropertyName',
+                    'left':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],
+                    'right':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],
+                ],
+                'differing':[
+                    'name':'myPropertyName2'
+                    'left':['finalValue':'myPropertyValue1','defaultValue':'','storedValue':'','transformations':[]],
+                    'right':['finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[]]
+                ]
+            ]
         cleanup:
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
