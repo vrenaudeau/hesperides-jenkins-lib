@@ -570,14 +570,24 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 moduleVersion: moduleVersion,
                 isWorkingCopy: true,
                 logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
-            hesperides.createInstance(app: applicationName, platform: platformName2, moduleName: moduleName, instance: instanceName, path: "#${logicGroupName}#${subLogicGroup}")
-            def info2 = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
-            def modulePropertiesPath2 = info2.modules[0].properties_path
-            def props2 = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
-            log(info)
-            props2['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"],[name: "myPropertyName2",value: "myPropertyValue2"])
-            hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2, commitMsg: 'Update properties for getDiffPropDisplay test function PTF2', properties: props2, platformVid: info2.version_id)
-            def newProps2 = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
+            hesperides.createInstance(app: applicationName,
+                                      platform: platformName2,
+                                      moduleName: moduleName,
+                                      instance: instanceName,
+                                      path: "#${logicGroupName}#${subLogicGroup}")
+            def platform = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
+            def modulePropertiesPath2 = platform.modules[0].properties_path
+            def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
+            props['key_value_properties'].add(
+                [name: "myPropertyName1",value: "myPropertyValue"],
+                [name: "myPropertyName2",value: "myPropertyValue2"],
+            )
+            hesperides.updatePropertiesForPlatform(app: applicationName,
+                                                   platform: platformName2,
+                                                   modulePropertiesPath: modulePropertiesPath2,
+                                                   commitMsg: 'Update properties for getDiffPropDisplay test function PTF2',
+                                                   properties: props,
+                                                   platformVid: platform.version_id)
         when:
             diffPropDisplay = hesperides.getDiffPropertiesAsString(
                 app: applicationName,
@@ -590,16 +600,16 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
         then:
             log("platform ppties: ${diffPropDisplay}")
             diffPropDisplay == '''*********************************************************
-      Total of items in the &quot;differing&quot; section : 0
+      Total of items in the "differing" section : 0
 *********************************************************
 
   =================================================================================================================================
-|                                            R E P O R T   D I F F   P R O P E R T I E S                                            |
+|                                            REPORT DIFF PROPERTIES                                           |
 | ================================================================================================================================= |
-|    #    |      P R O P E R T I E S      |      F I N A L   L E F T   V A L U E      |      F I N A L   R I G H T   V A L U E      |
+|    #    |      PROPERTIES      |      FINAL LEFT VALUE     |      FINAL RIGHT VALUE     |
 | ================================================================================================================================= |
 |                                                                                                                                   |
-|                         * * * * *   N O   P R O P E R T I E S   I N   D I F F E R E N C E S !   * * * * *                         |
+|                         * * * * *   NO PROPERTIES ARE DIFFERING!   * * * * *                         |
 |                                                                                                                                   |
   ================================================================================================================================='''
             /*[
