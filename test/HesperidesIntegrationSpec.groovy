@@ -585,7 +585,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.updatePropertiesForPlatform(app: applicationName,
                                                    platform: platformName2,
                                                    modulePropertiesPath: modulePropertiesPath2,
-                                                   commitMsg: 'Update properties for getDiffPropDisplay test function PTF2',
+                                                   commitMsg: 'Update properties for getDiffPropertiesAsString test function PTF2',
                                                    properties: props,
                                                    platformVid: platform.version_id)
         when:
@@ -600,18 +600,16 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
         then:
             log("platform ppties: ${diffPropDisplay}")
             diffPropDisplay == '''*********************************************************
-      Total of items in the "differing" section : 0
+      Total of item in the "differing" section : 1
 *********************************************************
 
-  =================================================================================================================================
-|                                            REPORT DIFF PROPERTIES                                           |
-| ================================================================================================================================= |
-|    #    |      PROPERTIES      |      FINAL LEFT VALUE     |      FINAL RIGHT VALUE     |
-| ================================================================================================================================= |
-|                                                                                                                                   |
-|                         * * * * *   NO PROPERTIES ARE DIFFERING!   * * * * *                         |
-|                                                                                                                                   |
-  ================================================================================================================================='''
+  =========================================================================================
+|                                  REPORT DIFF  PROPERTIES                                  |
+| ========================================================================================= |
+|    #    |      PROPERTIES      |      FINAL LEFT VALUE      |      FINAL RIGHT VALUE      |
+| ========================================================================================= |
+|    1    | myPropertyName2      |      myPropertyValue1      |      myPropertyValue1       |
+| ========================================================================================= |'''
             /*[
                 'only_left':[],
                 'only_right':[],
