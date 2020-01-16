@@ -562,26 +562,6 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
 
     def "Can display, as text, the differences of properties between 2 deployed modules on the same platform"() {
         setup:
-            log "${ENV.HESPERIDES_AUTH}@${ENV.HESPERIDES_HOST}:${ENV.HESPERIDES_PORT}"
-            hesperides.createPlatform(app: applicationName, platform: platformName, version: '1.0.0.0')
-            def infos = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
-            hesperides.createModule(moduleName: moduleName, version: moduleVersion)
-            hesperides.putModuleOnPlatform(
-                app: applicationName,
-                platform: platformName,
-                moduleName: moduleName,
-                moduleVersion: moduleVersion,
-                isWorkingCopy: true,
-                logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
-            hesperides.createInstance(app: applicationName, platform: platformName, moduleName: moduleName, instance: instanceName, path: "#${logicGroupName}#${subLogicGroup}")
-            def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
-            def modulePropertiesPath = info.modules[0].properties_path
-            def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
-            props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"], [name: "myPropertyName2",value: "myPropertyValue1"])
-            hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath, commitMsg: 'Update properties for getDiffPropDisplay test function PTF1', properties: props, platformVid: info.version_id)
-            def newProps = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName, modulePropertiesPath: modulePropertiesPath)
-            hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
-            
             hesperides.putModuleOnPlatform(
                 app: applicationName,
                 platform: platformName2,
