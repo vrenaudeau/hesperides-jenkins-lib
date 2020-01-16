@@ -579,7 +579,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.updatePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2, commitMsg: 'Update properties for getDiffPropDisplay test function PTF2', properties: props2, platformVid: info2.version_id)
             def newProps2 = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
         when:
-            diffPropDisplay = hesperides.getDiffPropDisplay(
+            diffPropDisplay = hesperides.getDiffPropertiesAsString(
                 app: applicationName,
                 platform: platformName,
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
@@ -589,7 +589,20 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             )
         then:
             log("platform ppties: ${diffPropDisplay}")
-            diffPropDisplay == [
+            diffPropDisplay == '''*********************************************************
+      Total of items in the &quot;differing&quot; section : 0
+*********************************************************
+
+  =================================================================================================================================
+|                                            R E P O R T   D I F F   P R O P E R T I E S                                            |
+| ================================================================================================================================= |
+|    #    |      P R O P E R T I E S      |      F I N A L   L E F T   V A L U E      |      F I N A L   R I G H T   V A L U E      |
+| ================================================================================================================================= |
+|                                                                                                                                   |
+|                         * * * * *   N O   P R O P E R T I E S   I N   D I F F E R E N C E S !   * * * * *                         |
+|                                                                                                                                   |
+  ================================================================================================================================='''
+            /*[
                 'only_left':[],
                 'only_right':[],
                 'common':[
@@ -598,11 +611,11 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                     'right':['finalValue':'myPropertyValue','defaultValue':'','storedValue':'','transformations':[]],
                 ],
                 'differing':[
-                    'name':'myPropertyName2'
+                    'name':'myPropertyName2',
                     'left':['finalValue':'myPropertyValue1','defaultValue':'','storedValue':'','transformations':[]],
-                    'right':['finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[]]
+                    'right':['finalValue':'myPropertyValue2','defaultValue':'','storedValue':'','transformations':[]],
                 ]
-            ]
+            ]*/
         cleanup:
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
