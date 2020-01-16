@@ -447,7 +447,7 @@ class Hesperides implements Serializable {
         def colProperty = '     PROPERTIES     '
         def colFinalLeftValue = '     FINAL LEFT VALUE     '
         def colFinalRightValue = '     FINAL RIGHT VALUE     '
-        def noDifference = '     * * * * *   NO PROPERTIES ARE DIFFERING!  * * * * *     '
+        def noDifference = '     * * * * *   NO PROPERTIES ARE DIFFERING!   * * * * *     '
 
 /* **********************************************************************************************************
                                                  DISPLAY
