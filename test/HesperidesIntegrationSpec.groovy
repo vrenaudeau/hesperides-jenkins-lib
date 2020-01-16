@@ -429,7 +429,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             hesperides.deleteModule(moduleName: 'toto', version: '0.0', moduleType: 'workingcopy')
     }
 
-    def "Can create a new module in workingcopy from a module in workingcopy" "(deprecated isWorkingcopy argument)" {
+    def "Can create a new module in workingcopy from a module in workingcopy (deprecated isWorkingcopy argument)" {
         when:
             hesperides.createModule(moduleName: 'toto', version: '0.0')
             hesperides.createModule(moduleName: 'toto', version: '0.1', fromModule: [name: 'toto', version: '0.0', isWorkingcopy: true])
