@@ -577,6 +577,8 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
     def "Can display, as text, the differences of properties between 2 deployed modules on the same platform"() {
         setup:
             hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
+            def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
+            hesperides.createModule(moduleName: moduleName, version: moduleVersion)
             hesperides.putModuleOnPlatform(
                 app: applicationName,
                 platform: platformName2,
@@ -585,11 +587,10 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 isWorkingCopy: true,
                 logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
             hesperides.createInstance(app: applicationName,
-                                      platform: platformName2,
-                                      moduleName: moduleName,
-                                      instance: instanceName,
-                                      path: "#${logicGroupName}#${subLogicGroup}")
-            def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
+                platform: platformName2,
+                moduleName: moduleName,
+                instance: instanceName,
+                path: "#${logicGroupName}#${subLogicGroup}")
             def modulePropertiesPath2 = info.modules[0].properties_path
             def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
             props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"],[name: "myPropertyName2",value: "myPropertyValue2"])
@@ -600,8 +601,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 modulePropertiesPath: modulePropertiesPath2,
                 commitMsg: 'Update properties for getDiffPropertiesAsString test function PTF2',
                 properties: props,
-                platformVid: platform.version_id
-            )
+                platformVid: platform.version_id)
         when:
             diffPropDisplay = hesperides.getDiffPropertiesAsString(
                 app: applicationName,
@@ -609,8 +609,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
                 toPlatform: platformName2,
                 toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${secondModuleName}#${moduleVersion}#WORKINGCOPY",
-                diffType: 'differing'
-            )
+                diffType: 'differing')
         then:
             log("platform ppties: ${diffPropDisplay}")
             diffPropDisplay == '''*********************************************************
