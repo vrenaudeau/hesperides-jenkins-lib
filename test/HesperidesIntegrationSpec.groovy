@@ -578,7 +578,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
         setup:
             hesperides.createPlatform(app: applicationName, platform: platformName2, version: '1.0.0.0')
             def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
-            hesperides.createModule(moduleName: moduleName, version: moduleVersion)
+            //hesperides.createModule(moduleName: moduleName, version: moduleVersion)
             hesperides.putModuleOnPlatform(
                 app: applicationName,
                 platform: platformName2,
