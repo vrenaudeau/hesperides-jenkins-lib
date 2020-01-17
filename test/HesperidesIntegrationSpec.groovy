@@ -589,13 +589,11 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                                       moduleName: moduleName,
                                       instance: instanceName,
                                       path: "#${logicGroupName}#${subLogicGroup}")
-            def platform = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
-            def modulePropertiesPath2 = platform.modules[0].properties_path
+            def info = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
+            def modulePropertiesPath2 = info.modules[0].properties_path
             def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
-            props['key_value_properties'].add(
-                [name: "myPropertyName1",value: "myPropertyValue"],
-                [name: "myPropertyName2",value: "myPropertyValue2"]
-            )
+            props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"],[name: "myPropertyName2",value: "myPropertyValue2"])
+            log(info)
             hesperides.updatePropertiesForPlatform(
                 app: applicationName,
                 platform: platformName2,
