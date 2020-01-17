@@ -528,6 +528,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY"
             )
         then:
+            log(propertiesDiff)
             propertiesDiff != [
                 only_left: [],
                 only_right: [],
