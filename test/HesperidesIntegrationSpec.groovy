@@ -594,7 +594,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 key_value_properties: [
                     [name: "myPropertyName", value: "myPropertyValue1"]
                 ],
-                //iterable_properties: []
+                iterable_properties: []
             ]
             def platform1Info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
             hesperides.updatePropertiesForPlatform(
@@ -610,7 +610,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 key_value_properties: [
                     [name: "myPropertyName", value: "myPropertyValue2"]
                 ],
-                //iterable_properties: []
+                iterable_properties: []
             ]
             def platform2Info = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
             hesperides.updatePropertiesForPlatform(
