@@ -587,46 +587,59 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 moduleVersion: moduleVersion,
                 isWorkingCopy: true,
                 logicGroupPath: "#${logicGroupName}#${subLogicGroup}")
-            hesperides.createInstance(app: applicationName,
-                platform: platformName2,
-                moduleName: moduleName,
-                instance: instanceName,
-                path: "#${logicGroupName}#${subLogicGroup}")
-            def modulePropertiesPath2 = "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY"
-            def props = hesperides.getModulePropertiesForPlatform(app: applicationName,
-                                                                  platform: platformName2,
-                                                                  modulePropertiesPath: modulePropertiesPath2)
-            props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"])
-            props['key_value_properties'].add([name: "myPropertyName2",value: "myPropertyValue2"])
+            def modulePropertiesPath = "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY"
+
+            def props = [
+                //properties_version_id: 0,
+                key_value_properties: [
+                    [name: "myPropertyName", value: "myPropertyValue1"]
+                ],
+                //iterable_properties: []
+            ]
+            def platform1Info = hesperides.getPlatformInfo(app: applicationName, platform: platformName)
+            hesperides.updatePropertiesForPlatform(
+                app: applicationName,
+                platform: platformName,
+                modulePropertiesPath: modulePropertiesPath,
+                commitMsg: 'Update properties for getDiffPropertiesAsString test function PTF1',
+                properties: props,
+                platformVid: platform1Info.version_id)
+
+            props = [
+                //properties_version_id: 0,
+                key_value_properties: [
+                    [name: "myPropertyName", value: "myPropertyValue2"]
+                ],
+                //iterable_properties: []
+            ]
             def platform2Info = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
             hesperides.updatePropertiesForPlatform(
                 app: applicationName,
                 platform: platformName2,
-                modulePropertiesPath: modulePropertiesPath2,
+                modulePropertiesPath: modulePropertiesPath,
                 commitMsg: 'Update properties for getDiffPropertiesAsString test function PTF2',
                 properties: props,
                 platformVid: platform2Info.version_id)
-            log("info (fct3): ${platform2Info}")
         when:
             diffPropDisplay = hesperides.getDiffPropertiesAsString(
                 app: applicationName,
                 platform: platformName,
-                modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
+                modulePropertiesPath: modulePropertiesPath,
                 toPlatform: platformName2,
-                toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
+                toModulePropertiesPath: modulePropertiesPath,
                 diffType: 'differing')
         then:
-            diffPropDisplay == '''*********************************************************
-                      Total of item in the "differing" section : 1
-                *********************************************************
-                
-                  =========================================================================================
-                |                                  REPORT DIFF  PROPERTIES                                  |
-                | ========================================================================================= |
-                |    #    |      PROPERTIES      |      FINAL LEFT VALUE      |      FINAL RIGHT VALUE      |
-                | ========================================================================================= |
-                |    1    | myPropertyName2      |      myPropertyValue1      |      myPropertyValue1       |
-                | ========================================================================================= |'''
+            diffPropDisplay == '''*********************************************************\n
+                      Total of item in the "differing" section : 1\n
+                *********************************************************\n
+                \n
+                  =========================================================================================\n
+                |                                  REPORT DIFF  PROPERTIES                                  |\n
+                | ========================================================================================= |\n
+                |    #    |      PROPERTIES      |      FINAL LEFT VALUE      |      FINAL RIGHT VALUE      |\n
+                | ========================================================================================= |\n
+                |    1    | myPropertyName       |      myPropertyValue1      |      myPropertyValue2       |\n
+                | ========================================================================================= |\n'''
         cleanup:
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
     }
