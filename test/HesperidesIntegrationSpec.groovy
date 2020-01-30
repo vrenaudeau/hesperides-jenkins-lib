@@ -528,28 +528,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY"
             )
         then:
-            propertiesDiff == [
-                only_left=[],
-                only_right=[],
-                common=[
-                    [
-                        name=myPropertyName,
-                        left=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]],
-                        right=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]]
-                    ],
-                    [
-                        name=LCM_vha_test_builtin_property,
-                        left=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]],
-                        right=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]]
-                    ],
-                    [
-                        name=LCM_vha_test_property,
-                        left=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]],
-                        right=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]]
-                    ]
-                ],
-                differing=[]
-            ]
+            propertiesDiff == [only_left=[],only_right=[],common=[[name=myPropertyName,left=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]],right=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]]],[name=LCM_vha_test_builtin_property,left=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]],right=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]]],[name=LCM_vha_test_property,left=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]],right=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]]]],differing=[]]
     }
 
     def "Can compare 2 deployed modules on different platforms"() {
