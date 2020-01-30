@@ -534,6 +534,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 common: [],
                 differing: []
             ]*/
+            log("propertiesDiff (fct1): ${propertiesDiff}")
             propertiesDiff == [only_left=[],only_right=[],common=[[left=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]],right=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]],name=myPropertyName],[left=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]],right=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]],name=LCM_vha_test_builtin_property],[left=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]],right=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]],name=LCM_vha_test_property]],differing=[]]
     }
 
@@ -556,6 +557,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 toPlatform: platformName2,
                 toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${secondModuleName}#${moduleVersion}#WORKINGCOPY")
         then:
+            log("propertiesDiff (fct2): ${propertiesDiff}")
             propertiesDiff != null
         cleanup:
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
@@ -590,6 +592,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 commitMsg: 'Update properties for getDiffPropertiesAsString test function PTF2',
                 properties: props,
                 platformVid: platform.version_id)
+                log("diffPropDisplay (fct3): ${diffPropDisplay}")
         when:
             diffPropDisplay = hesperides.getDiffPropertiesAsString(
                 app: applicationName,
@@ -599,7 +602,6 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${secondModuleName}#${moduleVersion}#WORKINGCOPY",
                 diffType: 'differing')
         then:
-            log("platform ppties: ${diffPropDisplay}")
             diffPropDisplay == '''*********************************************************
                       Total of item in the "differing" section : 1
                 *********************************************************
