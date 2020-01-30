@@ -590,7 +590,6 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             def modulePropertiesPath = "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY"
 
             def props = [
-                //properties_version_id: 0,
                 key_value_properties: [
                     [name: "myPropertyName", value: "myPropertyValue1"]
                 ],
@@ -606,7 +605,6 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 platformVid: platform1Info.version_id)
 
             props = [
-                //properties_version_id: 0,
                 key_value_properties: [
                     [name: "myPropertyName", value: "myPropertyValue2"]
                 ],
