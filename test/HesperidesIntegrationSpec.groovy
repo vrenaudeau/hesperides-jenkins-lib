@@ -528,14 +528,28 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY"
             )
         then:
-            /*propertiesDiff != [
-                only_left: [],
-                only_right: [],
-                common: [],
-                differing: []
-            ]*/
-            log("propertiesDiff (fct1): ${propertiesDiff}")
-            propertiesDiff == [only_left=[],only_right=[],common=[[left=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]],right=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]],name=myPropertyName],[left=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]],right=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]],name=LCM_vha_test_builtin_property],[left=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]],right=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]],name=LCM_vha_test_property]],differing=[]]
+            propertiesDiff == [
+                only_left=[],
+                only_right=[],
+                common=[
+                    [
+                        name=myPropertyName,
+                        left=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]],
+                        right=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]]
+                    ],
+                    [
+                        name=LCM_vha_test_builtin_property,
+                        left=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]],
+                        right=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]]
+                    ],
+                    [
+                        name=LCM_vha_test_property,
+                        left=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]],
+                        right=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]]
+                    ]
+                ],
+                differing=[]
+            ]
     }
 
     def "Can compare 2 deployed modules on different platforms"() {
@@ -556,8 +570,8 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
                 toPlatform: platformName2,
                 toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${secondModuleName}#${moduleVersion}#WORKINGCOPY")
-        then:
             log("propertiesDiff (fct2): ${propertiesDiff}")
+        then:
             propertiesDiff != null
         cleanup:
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
@@ -583,8 +597,8 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             //def modulePropertiesPath2 = info.modules[0].properties_path
             def modulePropertiesPath2 = hesperides.getPlatformInfo(app: applicationName, platform: platformName).modules[0].properties_path
             def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
-            props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"],[name: "myPropertyName2",value: "myPropertyValue2"])
-            log("log : ${info}")
+            props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"])
+            props['key_value_properties'].add([name: "myPropertyName2",value: "myPropertyValue2"])
             hesperides.updatePropertiesForPlatform(
                 app: applicationName,
                 platform: platformName2,
@@ -592,7 +606,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 commitMsg: 'Update properties for getDiffPropertiesAsString test function PTF2',
                 properties: props,
                 platformVid: platform.version_id)
-                log("diffPropDisplay (fct3): ${diffPropDisplay}")
+            log("info (fct3): ${info}")
         when:
             diffPropDisplay = hesperides.getDiffPropertiesAsString(
                 app: applicationName,
