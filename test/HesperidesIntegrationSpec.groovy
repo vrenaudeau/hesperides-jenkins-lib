@@ -592,11 +592,13 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 moduleName: moduleName,
                 instance: instanceName,
                 path: "#${logicGroupName}#${subLogicGroup}")
-            def platform2Info = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
-            def modulePropertiesPath2 = platform2Info.modules[0].properties_path
-            def props = hesperides.getModulePropertiesForPlatform(app: applicationName, platform: platformName2, modulePropertiesPath: modulePropertiesPath2)
+            def modulePropertiesPath2 = "#${logicGroupName}#${subLogicGroup}#${moduleVersion}#${moduleVersion}#WORKINGCOPY"
+            def props = hesperides.getModulePropertiesForPlatform(app: applicationName,
+                                                                  platform: platformName2,
+                                                                  modulePropertiesPath: modulePropertiesPath2)
             props['key_value_properties'].add([name: "myPropertyName1",value: "myPropertyValue"])
             props['key_value_properties'].add([name: "myPropertyName2",value: "myPropertyValue2"])
+            def platform2Info = hesperides.getPlatformInfo(app: applicationName, platform: platformName2)
             hesperides.updatePropertiesForPlatform(
                 app: applicationName,
                 platform: platformName2,
@@ -611,7 +613,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 platform: platformName,
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
                 toPlatform: platformName2,
-                toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${secondModuleName}#${moduleVersion}#WORKINGCOPY",
+                toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleVersion}#${moduleVersion}#WORKINGCOPY",
                 diffType: 'differing')
         then:
             diffPropDisplay == '''*********************************************************
