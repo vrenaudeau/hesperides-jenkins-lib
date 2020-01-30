@@ -592,7 +592,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 moduleName: moduleName,
                 instance: instanceName,
                 path: "#${logicGroupName}#${subLogicGroup}")
-            def modulePropertiesPath2 = "#${logicGroupName}#${subLogicGroup}#${moduleVersion}#${moduleVersion}#WORKINGCOPY"
+            def modulePropertiesPath2 = "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY"
             def props = hesperides.getModulePropertiesForPlatform(app: applicationName,
                                                                   platform: platformName2,
                                                                   modulePropertiesPath: modulePropertiesPath2)
@@ -613,7 +613,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 platform: platformName,
                 modulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
                 toPlatform: platformName2,
-                toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleVersion}#${moduleVersion}#WORKINGCOPY",
+                toModulePropertiesPath: "#${logicGroupName}#${subLogicGroup}#${moduleName}#${moduleVersion}#WORKINGCOPY",
                 diffType: 'differing')
         then:
             diffPropDisplay == '''*********************************************************
