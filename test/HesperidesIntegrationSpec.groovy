@@ -529,7 +529,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             )
             log("propertiesDiff: ${propertiesDiff}")
         then:
-            propertiesDiff == [only_left=[],only_right=[],common=[[name=myPropertyName,left=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]],right=[finalValue=myPropertyValue,defaultValue=null,storedValue=myPropertyValue,transformations=[]]],[name=LCM_vha_test_builtin_property,left=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]],right=[finalValue=platform,defaultValue=null,storedValue=[[hesperides.platform.name]],transformations=[PROPERTY_SUBSTITUTION_LEVEL_1]]],[name=LCM_vha_test_property,left=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]],right=[finalValue=42,defaultValue=null,storedValue=42,transformations=[]]]],differing=[]]
+            propertiesDiff == [only_left:[], only_right:[], common:[[left:[finalValue:platform, defaultValue:null, storedValue:{{hesperides.platform.name}}, transformations:[PROPERTY_SUBSTITUTION_LEVEL_1]], right:[finalValue:platform, defaultValue:null, storedValue:{{hesperides.platform.name}}, transformations:[PROPERTY_SUBSTITUTION_LEVEL_1]], name:LCM_vha_test_builtin_property], [left:[finalValue:myPropertyValue, defaultValue:null, storedValue:myPropertyValue, transformations:[]], right:[finalValue:myPropertyValue, defaultValue:null, storedValue:myPropertyValue, transformations:[]], name:myPropertyName], [left:[finalValue:42, defaultValue:null, storedValue:42, transformations:[]], right:[finalValue:42, defaultValue:null, storedValue:42, transformations:[]], name:LCM_vha_test_property]], differing:[]]
     }
 
     def "Can compare 2 deployed modules on different platforms"() {
@@ -608,15 +608,15 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 diffType: 'differing')
         then:
             diffPropDisplay == '''*********************************************************\n
-                      Total of item in the "differing" section : 1\n
-                *********************************************************\n
-                \n
-                  =========================================================================================\n
-                |                                  REPORT DIFF PROPERTIES                                   |\n
-                | ========================================================================================= |\n
-                |    #    |      PROPERTIES      |      FINAL LEFT VALUE      |      FINAL RIGHT VALUE      |\n
-                | ========================================================================================= |\n
-                |    1    | myPropertyName       |      myPropertyValue1      |      myPropertyValue2       |\n
+                      Total of item in the "differing" section : 1\n 
+                *********************************************************\n 
+                \n 
+                  =========================================================================================\n 
+                |                                  REPORT DIFF PROPERTIES                                   |\n 
+                | ========================================================================================= |\n 
+                |    #    |      PROPERTIES      |      FINAL LEFT VALUE      |      FINAL RIGHT VALUE      |\n 
+                | ========================================================================================= |\n 
+                |    1    | myPropertyName       |      myPropertyValue1      |      myPropertyValue2       |\n 
                 | ========================================================================================= |\n'''
         cleanup:
             hesperides.deletePlatform(app: applicationName, platform: platformName2)
