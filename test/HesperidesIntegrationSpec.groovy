@@ -607,6 +607,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 toModulePropertiesPath: modulePropertiesPath,
                 diffType: 'differing')
             def testDiff = diffPropDisplay
+            log(diffPropDisplay)
         then:
             diffPropDisplay != null
             //diffPropDisplay == testDiff
