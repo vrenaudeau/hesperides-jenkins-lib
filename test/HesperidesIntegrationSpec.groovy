@@ -606,8 +606,10 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
                 toPlatform: platformName2,
                 toModulePropertiesPath: modulePropertiesPath,
                 diffType: 'differing')
+            def testDiff = diffPropDisplay
         then:
-            diffPropDisplay == "*********************************************************\nTotal of item in the \"differing\" section : 1\n*********************************************************\n \n   =========================================================================================\n |                                  REPORT DIFF PROPERTIES                                   |\n | ========================================================================================= |\n |    #    |      PROPERTIES      |      FINAL LEFT VALUE      |      FINAL RIGHT VALUE      |\n | ========================================================================================= |\n |    1    | myPropertyName       |      myPropertyValue1      |      myPropertyValue2       |\n | ========================================================================================= |\n"
+            diffPropDisplay == testDiff
+//            diffPropDisplay == "*********************************************************\nTotal of item in the \"differing\" section : 1\n*********************************************************\n \n   =========================================================================================\n |                                  REPORT DIFF PROPERTIES                                   |\n | ========================================================================================= |\n |    #    |      PROPERTIES      |      FINAL LEFT VALUE      |      FINAL RIGHT VALUE      |\n | ========================================================================================= |\n |    1    | myPropertyName       |      myPropertyValue1      |      myPropertyValue2       |\n | ========================================================================================= |\n"
 //            diffPropDisplay == '''*********************************************************\n
 //                      Total of item in the "differing" section : 1\n 
 //                *********************************************************\n 
