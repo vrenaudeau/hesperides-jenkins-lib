@@ -612,7 +612,7 @@ class HesperidesIntegrationSpec extends Specification implements Helper {
             //log(diffPropDisplay)
         then:
             diffPropDisplay != null
-            diffPropDisplay.contains("myPropertyName") || diffPropDisplay.contains("myPropertyValue1") || diffPropDisplay.contains("myPropertyValue2")
+            diffPropDisplay.contains("myPropertyName") && diffPropDisplay.contains("myPropertyValue1") && diffPropDisplay.contains("myPropertyValue2")
             //diffPropDisplay == testDiff
 //            diffPropDisplay == '''*********************************************************
 //Total of item in the "differing" section : 1
